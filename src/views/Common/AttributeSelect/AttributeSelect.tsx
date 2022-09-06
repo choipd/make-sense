@@ -211,14 +211,15 @@ export const AttributeSelect = (props: IProps) => {
                 );
             case ATTRIBUTE_TYPE.MAIN_CATEGORY:
                 return Object.values(MAIN_CATEGORY_CODE)
-                    .filter((v) => typeof v === 'number')
+                    .filter((v) => typeof v === 'number' && v !== -1)
                     .map((value) => renderMainCategory(value));
             case ATTRIBUTE_TYPE.SUB_CATEGORY: {
                 const subCategoryCodes =
                     mainCategory > 0
                         ? ITEM_CATEGORY[MAIN_CATEGORY_CODE[mainCategory]]
                         : Object.values(SUB_CATEGORY_CODE).filter(
-                              (value) => typeof value === 'number'
+                              (value) =>
+                                  typeof value === 'number' && value !== -1
                           );
 
                 console.log('subCategoryCodes = ', subCategoryCodes);
