@@ -164,19 +164,23 @@ const LabelInfoPopup: React.FC<IProps> = ({
                     (human) => human.uuid === item
                 );
 
-                setHumanInfo(human);
+                let composedGender;
+                let selectiveStyles;
 
-                const composedGender = human
-                    ? human.gender
-                    : LabelsSelector.getActiveGender();
+                if (item === '-1' || !human) {
+                    setHumanInfo(null);
+                    composedGender = LabelsSelector.getActiveGender();
+                    selectiveStyles = LabelsSelector.getActiveStyles();
+                } else {
+                    setHumanInfo(human);
+                    composedGender = human.gender;
+                    selectiveStyles = human.styles;
+                }
+
                 const genderStyles =
                     composedGender === GENDER.MAN
                         ? FASHION_STYLE_MAN
                         : FASHION_STYLE_WOMAN;
-
-                const selectiveStyles = human
-                    ? human.styles
-                    : LabelsSelector.getActiveStyles();
 
                 const composedStyles =
                     selectiveStyles.length > 0
@@ -189,7 +193,6 @@ const LabelInfoPopup: React.FC<IProps> = ({
                                   .includes(style.seq)
                           );
 
-                setGender(composedGender);
                 setSelectedItems({
                     ...selectedItems,
                     [type]: item,
