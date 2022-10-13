@@ -42,7 +42,7 @@ const IMAGE_STATUS = [
         value: 'S'
     },
     {
-        label: 'Wasiting QC',
+        label: 'Waiting QC',
         value: 'W'
     },
     {
