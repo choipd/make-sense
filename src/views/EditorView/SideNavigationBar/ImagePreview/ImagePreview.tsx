@@ -81,7 +81,8 @@ class ImagePreview extends React.Component<IProps, IState> {
             this.props.imageData.id !== nextProps.imageData.id ||
             this.state.image !== nextState.image ||
             this.props.isSelected !== nextProps.isSelected ||
-            this.props.isChecked !== nextProps.isChecked
+            this.props.isChecked !== nextProps.isChecked || 
+            this.props.imageData.image_status !== nextProps.imageData.image_status 
         );
     }
 
@@ -178,8 +179,7 @@ class ImagePreview extends React.Component<IProps, IState> {
     };
 
     public render() {
-        const {isChecked, style, onClick, imageData} = this.props;
-       
+        const {isChecked, style, onClick, imageData} = this.props; 
         return (
             <div
                 className={this.getClassName()}
@@ -191,24 +191,26 @@ class ImagePreview extends React.Component<IProps, IState> {
                             className={`Foreground  ${imageData?.image_status === 'R' ? "danger": ""}`}
                             key={'Foreground'}
                             style={this.getStyle()}>
-                            <img
-                                className="Image"
-                                draggable={false}
-                                src={this.state.image.src}
-                                alt={this.state.image.alt}
-                                style={{...this.getStyle(), left: 0, top: 0}}
-                            />
-                            {isChecked && (
+                            
                                 <img
-                                    className="CheckBox"
+                                    className="Image"
                                     draggable={false}
-                                    src={'ico/ok.png'}
-                                    alt={'checkbox'}
+                                    src={this.state.image.src}
+                                    alt={this.state.image.alt}
+                                    style={{...this.getStyle(), left: 0, top: 0}}
                                 />
-                            )}
+                                {isChecked && (
+                                    <img
+                                        className="CheckBox"
+                                        draggable={false}
+                                        src={'ico/ok.png'}
+                                        alt={'checkbox'}
+                                    />
+                                )}
+                      
                         </div>,
                         <div
-                            className={`Background  ${imageData?.image_status === 'R' ? "danger": ""}`}
+                            className={`Background ${imageData?.image_status === 'R' ? "danger": ""}`}
                             key={'Background'}
                             style={this.getStyle()}
                         />
