@@ -19,10 +19,10 @@ RUN ls -a
 
 FROM node:16-alpine AS runner
 WORKDIR /app
-COPY --from=builder . .
+# COPY --from=builder . .
 COPY --from=builder /app/build /app/build
-COPY --from=builder /app/build/ico /app/build/labeler/ico
-COPY --from=builder /app/build/static /app/build/labeler/static
+COPY --from=builder /app/build /app/build/labeler/
+
 RUN npm install -g serve
 # expose port
 EXPOSE 3000
