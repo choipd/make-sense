@@ -1,0 +1,15 @@
+version: "3" #This denotes that we are using version 3 of Docker Compose
+services: #This section defines all the different containers we will create.
+    lablerTool: #This is the name of our Nextjs application.
+        build: #This specifies the location of our Dockerfile
+            context: . #This specifies the location of our Dockerfile
+            dockerfile: ./docker/develop/Dockerfile
+        ports: #This is used to map the container’s ports to the host machine.
+            - "3000:3000"
+        restart: always
+       
+#  lime_orange_stag: #This is the name of our Nextjs application.
+#    build: #This specifies the location of our Dockerfile
+#      context: . #This specifies the location of our Dockerfile
+#    ports: #This is used to map the container’s ports to the host machine.
+#      - "3000:3000"
