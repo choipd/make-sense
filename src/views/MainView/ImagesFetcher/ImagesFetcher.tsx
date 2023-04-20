@@ -23,15 +23,11 @@ import {APIService} from '../../../services/API';
 import {ClipLoader} from 'react-spinners';
 import {CSSHelper} from '../../../logic/helpers/CSSHelper';
 import {Package, ChevronRightBlack, ChevronRightWhite} from "../../../assets/icons"
-// import peudoData from './psedu_data.json'
-import { updateScoreCriteria } from 'store/ai/actionCreators';
-
 interface IProps {
     updateActiveImageIndexAction: (activeImageIndex: number) => any;
     addImageDataAction: (imageData: ImageData[]) => any;
     updateProjectDataAction: (projectData: ProjectData) => any;
     updateActivePopupTypeAction: (activePopupType: PopupWindowType) => any;
-    updateScoreCriteria: (scoreCriteria: any) => any;
     projectData: ProjectData;
     goBack: () => any
 }
@@ -67,12 +63,7 @@ const ImagesFetcher: React.FC<IProps> = (props: PropsWithChildren<IProps>) => {
             setIsLoading(true);
             const statusValueParams  = statusValue !== 'all' ? statusValue: null
             const {data} = await APIService.fetchImages({offset, limit, image_status: statusValueParams});
-            //@ts-ignore
             setAcceptedImages(data.data.image_list);
-            if(data.data?.score_criteria) {
-                console.log('criteria', data.data.score_criteria)
-                props.updateScoreCriteria(data.data.score_criteria);
-            }
         } catch (error) {
             console.error('Failed to loadImages: ', error);
         } finally {
@@ -218,8 +209,7 @@ const mapDispatchToProps = {
     updateActiveImageIndexAction: updateActiveImageIndex,
     addImageDataAction: addImageData,
     updateProjectDataAction: updateProjectData,
-    updateActivePopupTypeAction: updateActivePopupType,
-    updateScoreCriteria: updateScoreCriteria,
+    updateActivePopupTypeAction: updateActivePopupType
 };
 
 const mapStateToProps = (state: AppState) => ({

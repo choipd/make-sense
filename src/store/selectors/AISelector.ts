@@ -1,15 +1,6 @@
 import {store} from '../..';
 
 export class AISelector {
-    public static getScoreCriteria(): {
-        gender: number,
-        style: number,
-        color: number,
-        pattern: number,
-        item: number    
-    } {
-        return store.getState().ai.scoreCriteria;
-    }
     public static getSuggestedLabelList(): string[] {
         return store.getState().ai.suggestedLabelList;
     }

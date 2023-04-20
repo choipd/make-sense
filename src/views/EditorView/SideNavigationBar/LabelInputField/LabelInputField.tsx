@@ -38,8 +38,7 @@ interface IProps {
     updateActiveHumanID: (humanId: string) => any;
     imageStatus?: string ;
     qcStatus?: string;
-    qcComment?: string;
-    scoreFlag?: boolean;
+    qcComment?: string
 }
 
 interface IState {
@@ -171,7 +170,7 @@ class LabelInputField extends React.Component<IProps, IState> {
     };
 
     public render() {
-        const {size, id, value, onDelete, onSelectInfo, mode, description, qcStatus, scoreFlag} =
+        const {size, id, value, onDelete, onSelectInfo, mode, description, qcStatus} =
             this.props;
            
         return (
@@ -226,7 +225,7 @@ class LabelInputField extends React.Component<IProps, IState> {
                         </div> */}
                         <div className="ContentWrapper">
                             <ImageButton
-                                externalClassName={`info ${qcStatus === "R" || scoreFlag ? "danger" : qcStatus === "P" ? "success" : ""}`}
+                                externalClassName={`info ${qcStatus === "R" ? "danger" : qcStatus === "P" ? "success" : ""}`}
                                 image={'ico/info.png'}
                                 imageAlt={'info'}
                                 buttonSize={{width: 30, height: 30}}

@@ -133,7 +133,6 @@ export const vi = {
         GOLD: 'màu vàng đồng',
         SILVER: 'màu bạc',
         CYAN: 'xanh ngọc',
-        MAGENTA: 'màu hồng nóng',
         UNKNOWN: 'KHÔNG XÁC ĐỊNH'
     },
     ITEM_PATTERN: {

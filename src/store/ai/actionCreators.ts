@@ -45,12 +45,3 @@ export function updateDisabledAIFlag(isAIDisabled: boolean): AIActionTypes {
         }
     }
 }
-
-export function updateScoreCriteria(scoreCriteria: any): AIActionTypes {
-    return {
-        type: Action.UPDATE_SCORE_CRITERIA,
-        payload: {
-            scoreCriteria,
-        }
-    }
-}
