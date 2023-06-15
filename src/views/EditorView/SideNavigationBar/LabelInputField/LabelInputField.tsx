@@ -183,7 +183,7 @@ class LabelInputField extends React.Component<IProps, IState> {
             qcStatus,
             scoreFlag
         } = this.props;
-
+        
         return (
             <div
                 className={this.getClassName()}
@@ -202,7 +202,10 @@ class LabelInputField extends React.Component<IProps, IState> {
                         height: size.height
                     }}>
                     <div className="Marker" />
-                    <div className="Mode">
+                    <div
+                        className={`Mode ${
+                            scoreFlag ? 'scoreFlag_danger' : ''
+                        }`}>
                         {mode === LabelModeType.HUMAN ? (
                             <img src="ico/user.png" alt="human" />
                         ) : (
@@ -237,7 +240,7 @@ class LabelInputField extends React.Component<IProps, IState> {
                         <div className="ContentWrapper">
                             <ImageButton
                                 externalClassName={`info ${
-                                    qcStatus === 'R' || scoreFlag
+                                    qcStatus === 'R'
                                         ? 'danger'
                                         : qcStatus === 'P'
                                         ? 'success'
