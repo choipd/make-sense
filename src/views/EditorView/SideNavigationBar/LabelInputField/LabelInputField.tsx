@@ -36,7 +36,7 @@ interface IProps {
     updateActiveLabelId: (highlightedLabelId: string) => any;
     updateActivePopupType: (activePopupType: PopupWindowType) => any;
     updateActiveHumanID: (humanId: string) => any;
-    imageStatus?: string ;
+    imageStatus?: string;
     qcStatus?: string;
     qcComment?: string;
     scoreFlag?: boolean;
@@ -172,9 +172,18 @@ class LabelInputField extends React.Component<IProps, IState> {
     };
 
     public render() {
-        const {size, id, value, onDelete, onSelectInfo, mode, description, qcStatus, scoreFlag} =
-            this.props;
-           
+        const {
+            size,
+            id,
+            value,
+            onDelete,
+            onSelectInfo,
+            mode,
+            description,
+            qcStatus,
+            scoreFlag
+        } = this.props;
+        
         return (
             <div
                 className={this.getClassName()}
@@ -193,7 +202,10 @@ class LabelInputField extends React.Component<IProps, IState> {
                         height: size.height
                     }}>
                     <div className="Marker" />
-                    <div className="Mode">
+                    <div
+                        className={`Mode ${
+                            scoreFlag ? 'scoreFlag_danger' : ''
+                        }`}>
                         {mode === LabelModeType.HUMAN ? (
                             <img src="ico/user.png" alt="human" />
                         ) : (
@@ -227,7 +239,13 @@ class LabelInputField extends React.Component<IProps, IState> {
                         </div> */}
                         <div className="ContentWrapper">
                             <ImageButton
-                                externalClassName={`info ${qcStatus === "R" || scoreFlag ? "danger" : qcStatus === "P" ? "success" : ""}`}
+                                externalClassName={`info ${
+                                    qcStatus === 'R'
+                                        ? 'danger'
+                                        : qcStatus === 'P'
+                                        ? 'success'
+                                        : ''
+                                }`}
                                 image={'ico/info.png'}
                                 imageAlt={'info'}
                                 buttonSize={{width: 30, height: 30}}

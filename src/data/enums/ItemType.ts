@@ -473,7 +473,7 @@ export enum ITEM_COLOR {
     GOLD,
     SILVER,
     CYAN,
-    MAGENTA,
+    // MAGENTA,
     UNKNOWN = -1
 }
 

@@ -198,7 +198,7 @@ const RectLabelsList: React.FC<IProps> = ({
             if (found) {
                 return (
                     <div className="ItemContainer">
-                        {found.styles.map((styleString) => {
+                        {Array.isArray(found.styles) && found.styles.map((styleString) => {
                             const style = _.find(
                                 found.gender === GENDER.MAN
                                     ? FASHION_STYLE_MAN
@@ -246,7 +246,7 @@ const RectLabelsList: React.FC<IProps> = ({
             if (found) {
                 return (
                     <div className="ItemContainer">
-                        {found.styles.map((styleString) => {
+                        {Array.isArray(found.styles) &&found.styles.map((styleString) => {
                             const style = _.find(
                                 FASHION_STYLE,
                                 // to fix https://github.com/choipd/make-sense/issues/9

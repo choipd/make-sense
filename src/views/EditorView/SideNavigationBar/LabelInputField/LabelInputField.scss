@@ -202,4 +202,9 @@
             background-color: var(--leading-color);
         }
     }
+    .scoreFlag_danger {
+        img{
+             filter: invert(16%) sepia(99%) saturate(7404%) hue-rotate(4deg) brightness(95%) contrast(118%) !important
+        }
+    }
 }
