@@ -292,8 +292,8 @@ export class RectLabelsExporter {
                 ),
                 style: human.styles,
                 qc_status: human.qc_status,
-                box_position_rejected: human.box_position_rejected,
                 qc_comment: human.qc_comment,
+                box_position_rejected: human.box_position_rejected,
             })),
             item_info: imageData.items.map((item) => ({
                 item_id: `${getHumanIndex(item.humanId)}:${item.gender}:${
@@ -309,8 +309,8 @@ export class RectLabelsExporter {
                 ),
                 style: item.styles,
                 qc_status: item.qc_status,
-                box_position_rejected: item.box_position_rejected,
                 qc_comment: item.qc_comment,
+                box_position_rejected: item.box_position_rejected,
             }))
         };
         return json;
