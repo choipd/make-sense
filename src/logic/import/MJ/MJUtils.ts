@@ -56,7 +56,7 @@ export class MJUtils {
             annotation = JSON.parse(rawAnnotation) as RectJSON;
         }
         // console.log(131231, annotation)
-         
+
         const humansLabelRects: LabelRect[] = annotation.human_info.map(
             (human) => {
                 const {lt_x, lt_y, rb_x, rb_y} = human.bounding_box;
@@ -64,24 +64,25 @@ export class MJUtils {
                 const rectY: number = lt_y;
                 const rectWidth: number = Math.abs(rb_x - lt_x);
                 const rectHeight: number = Math.abs(rb_y - lt_y);
-                const qc_status: string = human.qc_status
-                const box_position_rejected: string = human.box_position_rejected
-                const qc_comment: string = human.qc_comment
+                const qc_status: string = human.qc_status;
+                const box_position_rejected: string =
+                    human.box_position_rejected;
+                const qc_comment: string = human.qc_comment;
                 // console.log('rect = ', rectX, rectY, rectWidth, rectHeight);
                 const rect = {
                     x: rectX,
                     y: rectY,
                     width: rectWidth,
-                    height: rectHeight,
+                    height: rectHeight
                 };
-                if(!human?.style) {
+                if (!human?.style) {
                     human['style'] = ['UNKNOWN'];
                 }
                 const aLabel = LabelUtil.createLabelRect(human.style[0], rect);
                 aLabel.mode = LabelModeType.HUMAN;
-                aLabel.qc_status = qc_status
-                aLabel.box_position_rejected = box_position_rejected
-                aLabel.qc_comment = qc_comment
+                aLabel.qc_status = qc_status;
+                aLabel.box_position_rejected = box_position_rejected;
+                aLabel.qc_comment = qc_comment;
                 return aLabel;
             }
         );
@@ -92,9 +93,10 @@ export class MJUtils {
                 const rectY: number = lt_y;
                 const rectWidth: number = Math.abs(rb_x - lt_x);
                 const rectHeight: number = Math.abs(rb_y - lt_y);
-                const qc_status: string = item.qc_status
-                const box_position_rejected: string = item.box_position_rejected
-                const qc_comment: string = item.qc_comment
+                const qc_status: string = item.qc_status;
+                const box_position_rejected: string =
+                    item.box_position_rejected;
+                const qc_comment: string = item.qc_comment;
                 // console.log('rect = ', rectX, rectY, rectWidth, rectHeight);
                 const rect = {
                     x: rectX,
@@ -102,16 +104,16 @@ export class MJUtils {
                     width: rectWidth,
                     height: rectHeight
                 };
-                if(!item?.style) {
-                    item['style'] = ['UNKNOWN']
+                if (!item?.style) {
+                    item['style'] = ['UNKNOWN'];
                 }
                 const aLabel = LabelUtil.createLabelRect(item.style[0], rect);
                 const [, , , , uuid, ,] = item.item_id.split(':');
                 aLabel.mode = LabelModeType.ITEM;
                 aLabel.id = uuid;
-                aLabel.qc_status = qc_status
-                aLabel.box_position_rejected = box_position_rejected
-                aLabel.qc_comment = qc_comment
+                aLabel.qc_status = qc_status;
+                aLabel.box_position_rejected = box_position_rejected;
+                aLabel.qc_comment = qc_comment;
                 return aLabel;
             }
         );
@@ -125,10 +127,13 @@ export class MJUtils {
                 gender: parseInt(gender),
                 type: parseInt(type),
                 styles: human.style,
-                styleScore: human.style_score?.split(":").map((score, i) => ({style: human.style_candidates.split(":")[i], score: parseFloat(score)})),
+                styleScore: human.style_score?.split(':').map((score, i) => ({
+                    style: human.style_candidates.split(':')[i],
+                    score: parseFloat(score)
+                })),
                 genderScore: human.gender_score,
-                qc_comment: human.qc_comment,
                 qc_status: human.qc_status,
+                qc_comment: human.qc_comment,
                 box_position_rejected: human.box_position_rejected
             };
         });
@@ -154,11 +159,19 @@ export class MJUtils {
                 color: parseInt(color),
                 pattern: parseInt(pattern),
                 styles: item.style,
-                colorScore: item.color_score?.split(":").map((score, i) => ({color: parseInt(item.colors.split(":")[i]), score: parseFloat(score)})),
-                patternScore: item.pattern_score?.split(":").map((score, i) => ({pattern: parseInt(item.patterns.split(":")[i]), score: parseFloat(score)})),
+                colorScore: item.color_score?.split(':').map((score, i) => ({
+                    color: parseInt(item.colors.split(':')[i]),
+                    score: parseFloat(score)
+                })),
+                patternScore: item.pattern_score
+                    ?.split(':')
+                    .map((score, i) => ({
+                        pattern: parseInt(item.patterns.split(':')[i]),
+                        score: parseFloat(score)
+                    })),
                 itemScore: item.item_score,
-                qc_comment: item.qc_comment,
                 qc_status: item.qc_status,
+                qc_comment: item.qc_comment,
                 box_position_rejected: item.box_position_rejected
             };
         });
