@@ -279,6 +279,7 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 };
                 return item
             });
+            
             //  console.log('next = ', updatedHumanInfo, imageData, humanInfo);
             updateImageDataByIdAction(imageData.id, imageData);
         }
