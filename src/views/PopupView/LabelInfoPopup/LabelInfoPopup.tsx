@@ -9,6 +9,7 @@ import {updateActivePopupType} from '../../../store/general/actionCreators';
 import {PopupWindowType} from '../../../data/enums/PopupWindowType';
 import {LabelsSelector} from '../../../store/selectors/LabelsSelector';
 import {TagButton} from '../../Common/TagButton/TagButton';
+
 import {
     ATTRIBUTE_TYPE,
     FASHION_STYLE,
@@ -41,8 +42,8 @@ import {vi as lang} from '../../../lang';
 import {GenericYesNoPopupDraggable} from '../GenericYesNoPopupDraggable/GenericYesNoPopupDraggable';
 import {JSONUploadStatus} from '../../../data/enums/JSONUploadStatus';
 import {Settings} from '../../../settings/Settings';
-import { FlagIcon } from 'assets/icons';
-import { AISelector } from 'store/selectors/AISelector';
+import {FlagIcon} from 'assets/icons';
+import {AISelector} from 'store/selectors/AISelector';
 
 interface IProps {
     labelRectId: string;
@@ -85,9 +86,8 @@ const LabelInfoPopup: React.FC<IProps> = ({
     const [gender, setGender] = useState<number>();
     const [image, setImage] = useState<string | undefined>();
     const [isFollowHumanSetting, setFollowHumanSetting] = useState(false);
-
     const criteria = AISelector.getScoreCriteria();
-
+    console.log(imageData, 'itemInfo');
     useEffect(() => {
         if (mode === LabelModeType.HUMAN) {
             const found = _.find(imageData.humans, {uuid: id});
@@ -101,7 +101,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 [ATTRIBUTE_TYPE.SOURCE]: found.type,
                 [ATTRIBUTE_TYPE.GENDER]: foundGender,
                 [ATTRIBUTE_TYPE.GENDER_SCORE]: found.genderScore,
-                [ATTRIBUTE_TYPE.STYLE_SCORE]: found.styleScore?.length > 0 ? found.styleScore[0].score : null,
+                [ATTRIBUTE_TYPE.STYLE_SCORE]:
+                    found.styleScore?.length > 0
+                        ? found.styleScore[0].score
+                        : null,
                 [ATTRIBUTE_TYPE.FASHION_STYLE]:
                     found.styles.length > 0
                         ? genderStyles.filter((style) =>
@@ -258,10 +261,24 @@ const LabelInfoPopup: React.FC<IProps> = ({
             updateActiveHumanTypeAction(updatedHumanInfo.type);
             updateActiveStylesAction(updatedHumanInfo.styles);
 
+            console.log(humanInfo, updatedHumanInfo, 'humanInfo');
             // update imageData
-            imageData.humans = imageData.humans.map((human) =>
-                human.uuid === humanInfo.uuid ? updatedHumanInfo : human
-            );
+            imageData.humans = imageData.humans.map((human) => {
+                if (human.uuid === humanInfo.uuid) return updatedHumanInfo;
+                return {
+                    ...human,
+                    gender:
+                        humanInfo.gender !== updatedHumanInfo.gender
+                            ? updatedHumanInfo.gender
+                            : humanInfo.gender,
+                    styles: !_.isEqual(
+                        humanInfo.styles,
+                        updatedHumanInfo.styles
+                    )
+                        ? updatedHumanInfo.styles
+                        : humanInfo.styles
+                };
+            });
             // console.log('next = ', updatedHumanInfo, imageData);
             updateImageDataByIdAction(imageData.id, imageData);
         }
@@ -298,38 +315,58 @@ const LabelInfoPopup: React.FC<IProps> = ({
         updateActivePopupTypeAction(null);
     };
 
-    const AttributeNameWithScore = ({title, score, criteria}:{title: string, score: number | null, criteria: number}) => 
+    const AttributeNameWithScore = ({
+        title,
+        score,
+        criteria
+    }: {
+        title: string;
+        score: number | null;
+        criteria: number;
+    }) => (
         <div className="AttributeName">
             <div>
                 <div>{title}</div>
-                {
-                    score && criteria
-                    ?
-                        score > criteria
-                        ? <div className={'AttributeScore'}>
+                {score && criteria ? (
+                    score > criteria ? (
+                        <div className={'AttributeScore'}>{score}</div>
+                    ) : (
+                        <div className={'AttributeScoreFlag'}>
+                            <FlagIcon
+                                fill="red"
+                                fontSize={'10px'}
+                                width={20}
+                                height={20}
+                            />
                             {score}
                         </div>
-                        : <div className={'AttributeScoreFlag'}>
-                            <FlagIcon fill='red' fontSize={"10px"} width={20} height={20} />
-                            {score}
-                        </div>
-                    : null
-                }
+                    )
+                ) : null}
             </div>
-        </div> 
+        </div>
+    );
 
-    const renderComment = () =>{
-      const {qc_comment, qc_status} = itemInfo || humanInfo
-      
-      if(qc_comment) {
-        return (
-          <div className="AttributeContainer mt-2">
-            <div className={`AttributeName ${qc_status === 'P' ? 'text-success':  qc_status === 'R' ? 'text-fail' : ''}`}>{qc_comment}</div>
-          </div>
-          )
-      }
-      return null
-    }
+    const renderComment = () => {
+        const {qc_comment, qc_status} = itemInfo || humanInfo;
+
+        if (qc_comment) {
+            return (
+                <div className="AttributeContainer mt-2">
+                    <div
+                        className={`AttributeName ${
+                            qc_status === 'P'
+                                ? 'text-success'
+                                : qc_status === 'R'
+                                ? 'text-fail'
+                                : ''
+                        }`}>
+                        {qc_comment}
+                    </div>
+                </div>
+            );
+        }
+        return null;
+    };
 
     const renderContent = () => {
         // console.log('humanInfo', humanInfo);
@@ -344,9 +381,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 {renderComment()}
                 <div className="AttributeContainer mt-2">
                     <AttributeNameWithScore
-                        title='Gender' 
-                        score={selectedItems[ATTRIBUTE_TYPE.GENDER_SCORE]} 
-                        criteria={criteria.item} />
+                        title="Gender"
+                        score={selectedItems[ATTRIBUTE_TYPE.GENDER_SCORE]}
+                        criteria={criteria.item}
+                    />
                     <div className="AttributeSelector">
                         <AttributeSelect
                             type={ATTRIBUTE_TYPE.GENDER}
@@ -369,9 +407,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 </div>
                 <div className="AttributeContainer">
                     <AttributeNameWithScore
-                        title='Styles' 
-                        score={selectedItems[ATTRIBUTE_TYPE.STYLE_SCORE]} 
-                        criteria={criteria.style} />
+                        title="Styles"
+                        score={selectedItems[ATTRIBUTE_TYPE.STYLE_SCORE]}
+                        criteria={criteria.style}
+                    />
                     <div className="AttributeSelector">
                         <AttributeSelect
                             type={ATTRIBUTE_TYPE.FASHION_STYLE}
@@ -388,11 +427,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                         <img src={image} width={230} height={230} />
                     </div>
                 ) : null}
-               
             </div>
         ) : (
             <div className="LabelInfoPopupContent">
-               {renderComment()}
+                {renderComment()}
                 <div className="AttributeContainer mt-2">
                     <div className="AttributeName">Item UUID</div>
                     <div className="AttributeSelector">
@@ -426,9 +464,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 </div>
                 <div className="AttributeContainer">
                     <AttributeNameWithScore
-                        title='Main Category' 
-                        score={selectedItems[ATTRIBUTE_TYPE.ITEM_SCORE]} 
-                        criteria={criteria.item} />
+                        title="Main Category"
+                        score={selectedItems[ATTRIBUTE_TYPE.ITEM_SCORE]}
+                        criteria={criteria.item}
+                    />
 
                     <div className="AttributeSelector">
                         <AttributeSelect
@@ -442,9 +481,10 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 </div>
                 <div className="AttributeContainer">
                     <AttributeNameWithScore
-                        title='Sub Category' 
-                        score={selectedItems[ATTRIBUTE_TYPE.ITEM_SCORE]} 
-                        criteria={criteria.item} />
+                        title="Sub Category"
+                        score={selectedItems[ATTRIBUTE_TYPE.ITEM_SCORE]}
+                        criteria={criteria.item}
+                    />
                     <div className="AttributeSelector">
                         <AttributeSelect
                             mainCategory={
@@ -459,11 +499,19 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 </div>
                 <div className="AttributeContainer">
                     <AttributeNameWithScore
-                        title='Color' 
-                        score={selectedItems[ATTRIBUTE_TYPE.COLOR_SCORE]?.length > 0 
-                            ? parseFloat(selectedItems[ATTRIBUTE_TYPE.COLOR_SCORE][0].score) 
-                            : null} 
-                        criteria={criteria.color} />
+                        title="Color"
+                        score={
+                            selectedItems[ATTRIBUTE_TYPE.COLOR_SCORE]?.length >
+                            0
+                                ? parseFloat(
+                                      selectedItems[
+                                          ATTRIBUTE_TYPE.COLOR_SCORE
+                                      ][0].score
+                                  )
+                                : null
+                        }
+                        criteria={criteria.color}
+                    />
                     <div className="AttributeSelector">
                         <AttributeSelect
                             type={ATTRIBUTE_TYPE.ITEM_COLOR}
@@ -475,11 +523,19 @@ const LabelInfoPopup: React.FC<IProps> = ({
                 </div>
                 <div className="AttributeContainer">
                     <AttributeNameWithScore
-                        title='Pattern' 
-                        score={selectedItems[ATTRIBUTE_TYPE.PATTERN_SCORE]?.length > 0 
-                            ? parseFloat(selectedItems[ATTRIBUTE_TYPE.PATTERN_SCORE][0].score) 
-                            : null} 
-                        criteria={criteria.pattern} />
+                        title="Pattern"
+                        score={
+                            selectedItems[ATTRIBUTE_TYPE.PATTERN_SCORE]
+                                ?.length > 0
+                                ? parseFloat(
+                                      selectedItems[
+                                          ATTRIBUTE_TYPE.PATTERN_SCORE
+                                      ][0].score
+                                  )
+                                : null
+                        }
+                        criteria={criteria.pattern}
+                    />
                     <div className="AttributeSelector">
                         <AttributeSelect
                             type={ATTRIBUTE_TYPE.ITEM_PATTERN}
@@ -510,7 +566,6 @@ const LabelInfoPopup: React.FC<IProps> = ({
                         <img src={image} width={230} height={230} />
                     </div>
                 ) : null}
-                
             </div>
         );
     };
