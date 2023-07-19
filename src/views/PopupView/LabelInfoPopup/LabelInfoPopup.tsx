@@ -259,9 +259,22 @@ const LabelInfoPopup: React.FC<IProps> = ({
             updateActiveStylesAction(updatedHumanInfo.styles);
 
             // update imageData
-            imageData.humans = imageData.humans.map((human) =>
-                human.uuid === humanInfo.uuid ? updatedHumanInfo : human
-            );
+            imageData.humans = imageData.humans.map((human) => {
+                if (human.uuid === humanInfo.uuid) return updatedHumanInfo;
+                return {
+                    ...human,
+                    gender:
+                        humanInfo.gender !== updatedHumanInfo.gender
+                            ? updatedHumanInfo.gender
+                            : humanInfo.gender,
+                    styles: !_.isEqual(
+                        humanInfo.styles,
+                        updatedHumanInfo.styles
+                    )
+                        ? updatedHumanInfo.styles
+                        : humanInfo.styles
+                };
+            });
             // console.log('next = ', updatedHumanInfo, imageData);
             updateImageDataByIdAction(imageData.id, imageData);
         }
