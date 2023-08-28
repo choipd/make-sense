@@ -36,15 +36,21 @@ export class APIService {
         if (!token) {
             throw Error('Token is required');
         }
-        return await axios({
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            url: `${Settings.API_PREFIX}/labeler/images`,
-            params: {limit, offset, image_status}
-        });
+        try {
+            return await axios({
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                url: `${Settings.API_PREFIX}/labeler/images`,
+                params: {limit, offset, image_status}
+            });
+        } catch (error) {
+            const message = "Can't fetch message";
+            alert(message);
+            throw Error(message);
+        }
     };
 
     public static updateImage = async ({
@@ -67,17 +73,23 @@ export class APIService {
         if (!json) {
             throw Error('JSON is required');
         }
-        return await axios({
-            method: 'put',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            url: `${Settings.API_PREFIX}/labeler/images/${imageId}`,
-            data: {
-                json
-            }
-        });
+        try {
+            return await axios({
+                method: 'put',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                url: `${Settings.API_PREFIX}/labeler/images/${imageId}`,
+                data: {
+                    json
+                }
+            });
+        } catch (error) {
+            const message = "Can't update item";
+            alert(message);
+            throw Error(message);
+        }
     };
     public static getTasks = async () => {
         const token = AuthSelector.getToken();
@@ -114,13 +126,19 @@ export class APIService {
         if (!token) {
             throw Error('Token is required');
         }
-        return await axios({
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${token}`
-            },
-            url: `${Settings.API_PREFIX}/labeler/common_summary`
-        });
+        try {
+            return await axios({
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                },
+                url: `${Settings.API_PREFIX}/labeler/common_summary`
+            });
+        } catch (error) {
+            const message = "Can't getSummary";
+            alert(message);
+            throw Error(message);
+        }
     };
 }
