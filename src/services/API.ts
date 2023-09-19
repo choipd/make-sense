@@ -26,11 +26,13 @@ export class APIService {
     public static fetchImages = async ({
         offset,
         limit,
-        image_status
+        image_status,
+        qlqc_status
     }: {
         offset: number;
         limit: number;
         image_status?: string;
+        qlqc_status?: string;
     }) => {
         const token = AuthSelector.getToken();
         if (!token) {
@@ -44,7 +46,7 @@ export class APIService {
                     Authorization: `Bearer ${token}`
                 },
                 url: `${Settings.API_PREFIX}/labeler/images`,
-                params: {limit, offset, image_status}
+                params: {limit, offset, image_status, qlqc_status}
             });
         } catch (error) {
             const message = "Can't fetch message";
