@@ -36,10 +36,12 @@ interface IProps {
     goBack: () => any
 }
 
+const ALL ='all'
+
 const IMAGE_STATUS = [
     {
         label: 'All',
-        value: 'all'
+        value: ALL
     },
     {
         label: 'Assigned',
@@ -54,19 +56,37 @@ const IMAGE_STATUS = [
         value: 'R'
     }
 ]
+
+const QLQC_STATUS = [
+    {
+        label: 'All',
+        value: ALL
+    },
+    {
+        label: 'QLQC Done',
+        value: 'RVD'
+    },
+    {
+        label: 'QLQC Rejected',
+        value: 'RVR'
+    }
+]
+
 const ImagesFetcher: React.FC<IProps> = (props: PropsWithChildren<IProps>) => {
     const [acceptedImages, setAcceptedImages] = useState<APIImageData[]>([]);
     const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(10);
     const [isLoading, setIsLoading] = useState(false);
-    const [statusValue, setStatusValue] = useState('all')
+    const [statusValue, setStatusValue] = useState(ALL)
+    const [qLQCValue, setQLQCStatus] = useState(ALL)
     const { goBack } = props 
 
     const loadImages = async () => {
         try {
             setIsLoading(true);
-            const statusValueParams  = statusValue !== 'all' ? statusValue: null
-            const {data} = await APIService.fetchImages({offset, limit, image_status: statusValueParams});
+            const statusValueParams  = statusValue !== ALL ? statusValue: null
+            const qLQCValueParams  = qLQCValue !== ALL ? qLQCValue: null
+            const {data} = await APIService.fetchImages({offset, limit, image_status: statusValueParams, qlqc_status: qLQCValueParams});
             //@ts-ignore
             setAcceptedImages(data.data.image_list);
             if(data.data?.score_criteria) {
@@ -100,7 +120,9 @@ const ImagesFetcher: React.FC<IProps> = (props: PropsWithChildren<IProps>) => {
         if (acceptedImages.length === 0)
             return (
                 <>
-                  <FormControl>
+                  <div className='LoginPopupContent__row'>
+                      <div className='LoginPopupContent__control__first'>
+                        <FormControl>
                             <label className='LoginPopupContent__label'>Image status</label>
                         
                             <Select
@@ -116,7 +138,28 @@ const ImagesFetcher: React.FC<IProps> = (props: PropsWithChildren<IProps>) => {
                                     ))
                                 }  
                             </Select>
-                        </FormControl>
+                         </FormControl>
+                        </div>
+                          <div className=' LoginPopupContent__control__second'>
+                       
+                            <FormControl >
+                                <label className='LoginPopupContent__label'>QLQC Status</label>
+                                 <Select
+                                    value={qLQCValue}                            
+                                    onChange={(e) =>{
+                                        setQLQCStatus(e.target.value.toString())
+                                    }}
+                                    className='LoginPopupContent__select'
+                                >
+                                    {
+                                        QLQC_STATUS.map(item=>(
+                                            <option value={item.value}>{item.label}</option>
+                                        ))
+                                    }  
+                                </Select>
+                            </FormControl>
+                        </div>
+                    </div>
                     <div className='LoginPopupContent__row'>
                     <div className='LoginPopupContent__control__first'>
                     <FormControl >
