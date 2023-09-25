@@ -63,6 +63,10 @@ const QLQC_STATUS = [
         value: ALL
     },
     {
+        label: 'Not QLQC',
+        value: 'null'
+    },
+    {
         label: 'QLQC Done',
         value: 'RVD'
     },
