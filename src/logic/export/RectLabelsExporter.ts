@@ -257,7 +257,7 @@ export class RectLabelsExporter {
     public static wrapRectLabelsIntoJSON(imageData: ImageData): RectJSON {
         if (imageData.labelRects.length === 0 || !imageData.loadStatus)
             return null;
-        
+
         const convertRect = (rect: IRect) => ({
             lt_x: Math.round(rect.x),
             lt_y: Math.round(rect.y),
@@ -277,12 +277,12 @@ export class RectLabelsExporter {
 
         const getHumanIndex = (uuid: string) =>
             imageData.humans.findIndex((human) => human.uuid === uuid);
-        
+
         const json: RectJSON = {
             //@ts-ignore
             img_path: imageData.fileData.path,
             writer_id: AuthSelector.getUserID(),
-            version: 1,
+            version: 2,
             human_info: imageData.humans.map((human) => ({
                 human_id: convertHumanId(human.uuid),
                 bounding_box: convertRect(
@@ -293,7 +293,7 @@ export class RectLabelsExporter {
                 style: human.styles,
                 qc_status: human.qc_status,
                 qc_comment: human.qc_comment,
-                box_position_rejected: human.box_position_rejected,
+                box_position_rejected: human.box_position_rejected
             })),
             item_info: imageData.items.map((item) => ({
                 item_id: `${getHumanIndex(item.humanId)}:${item.gender}:${
@@ -301,7 +301,7 @@ export class RectLabelsExporter {
                 }:${item.subCategory}:${item.uuid}:${item.color}:${
                     item.pattern
                 }`,
-          
+
                 bounding_box: convertRect(
                     imageData.labelRects.find(
                         (labelRect) => labelRect.id === item.uuid
@@ -310,7 +310,7 @@ export class RectLabelsExporter {
                 style: item.styles,
                 qc_status: item.qc_status,
                 qc_comment: item.qc_comment,
-                box_position_rejected: item.box_position_rejected,
+                box_position_rejected: item.box_position_rejected
             }))
         };
         return json;
