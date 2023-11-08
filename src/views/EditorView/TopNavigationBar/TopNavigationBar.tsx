@@ -150,8 +150,8 @@ const TopNavigationBar: React.FC<IProps> = (props) => {
                     <div className="Header" onClick={closePopup}>
                         <img
                             draggable={false}
-                            alt={'showniq icon'}
-                            src={'/showniq-icon.png'}
+                            alt={'make-sense'}
+                            src={'make-sense-ico-transparent.png'}
                         />
                     </div>
                 </div>
