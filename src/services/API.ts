@@ -88,7 +88,7 @@ export class APIService {
                 }
             });
         } catch (error) {
-            const message = "Can't update item";
+            const message = `Can't update item ${json}`;
             alert(message);
             throw Error(message);
         }
