@@ -1,0 +1,62 @@
+pipeline {
+    agent any
+    environment {
+        USER_PATH = "/home/projects/sn_labeler_tool"
+    }
+    stages {
+        /* stage('Checkout Repository') {
+            steps {
+                echo 'Checkout code from the repository...'
+                checkout scm
+            }
+        } */
+        stage('Setup Development Environment') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    env.ENV = "development"
+                }
+            }
+        }
+        stage('Setup Production Environment') {
+            when {
+                branch "production"
+            }
+            steps {
+                script {
+                    env.ENV = "production"
+                }
+            }
+        }
+        stage('Build & Run API Docker') {
+            when {
+                expression {
+                    return (env.BRANCH_NAME == 'production' || env.BRANCH_NAME == 'develop')
+                }
+            }
+            steps {
+                script {
+                    def dockerFile = "./deploy/docker/${env.ENV}/docker-compose.yml"
+                    def commands = """
+                        docker container prune -f
+                        docker image prune -a -f
+                        docker volume prune -f
+                        docker compose -f ${dockerFile} build
+                        docker compose -f ${dockerFile} up -d
+                    """
+                    sh commands
+                }
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Deploying completed successfully!'
+        }
+        failure {
+            echo 'Deploying failed.'
+        }
+    }
+}

@@ -1,0 +1,10 @@
+services:
+   labeler_tool_pro:
+      container_name: 'showniq_labeler_tool_pro'
+      image: 'im_showniq_labeler_tool_pro'
+      build:
+         context: ../../../
+         dockerfile: deploy/docker/production/Dockerfile
+      ports:
+         - "127.0.0.1:3008:3008"
+      restart: always
