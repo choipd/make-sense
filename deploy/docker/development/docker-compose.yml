@@ -1,0 +1,18 @@
+services:
+   labeler_tool_dev:
+      container_name: 'showniq_labeler_tool_dev'
+      image: 'im_showniq_labeler_tool_dev'
+      build:
+         context: ../../../
+         dockerfile: deploy/docker/development/Dockerfile
+      ports:
+         - "127.0.0.1:3009:3009"
+      restart: always
+#      deploy:
+#         resources:
+#            limits:
+#               cpus: '0.2'
+#               memory: 2G
+#            reservations:
+#               cpus: '0.2'
+#               memory: 2G
